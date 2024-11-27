@@ -152,6 +152,28 @@ def update_joystick():
 # 启动摇杆更新
 update_joystick()
 
+# 创建重新连接手柄的功能
+def reconnect_joystick():
+    global joystick, joystick_connected
+    pygame.joystick.quit()
+    pygame.joystick.init()
+
+    if pygame.joystick.get_count() > 0:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        joystick_connected = True
+        joystick_status_label.config(text=f"手柄已连接: {joystick.get_name()}", fg="green")
+        messagebox.showinfo("连接成功", f"已连接手柄: {joystick.get_name()}")
+    else:
+        joystick_connected = False
+        joystick_status_label.config(text="手柄未连接", fg="red")
+        messagebox.showwarning("连接失败", "未检测到手柄，请确保手柄已连接并重试。")
+
+# 添加重新连接手柄按钮
+reconnect_button = tk.Button(bottom_frame, text="重新连接手柄", command=reconnect_joystick)
+reconnect_button.pack(side=tk.LEFT, padx=10)
+
+
 # 主循环
 try:
     root.mainloop()
